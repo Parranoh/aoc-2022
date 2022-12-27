@@ -50,4 +50,4 @@ descendant =: adjacency (] +. +./ .*.)^:_ = i. # parent
 du =: (size = 0) # descendant +/ .* size
 
 smoutput +/ (#~ <:&100000) du
-smoutput <./ (#~ >:&({. du - 40000000)) du
+smoutput <./ (#~ >:&(_40000000 + {. du)) du
