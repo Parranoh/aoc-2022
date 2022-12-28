@@ -37,7 +37,7 @@ file =: monad define
     end.
 )
 dir =: [: file '0' , 3 }. ]
-monad define input
+monad define''
     for_c. input do.
         cmd =: > c
         cd`ls`file`dir@.((4 3 $ '$ c$ l9zzdir') I. 3 {. cmd) cmd
