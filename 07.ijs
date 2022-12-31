@@ -46,7 +46,7 @@ monad define''
 
 NB. compute sizes of dirs
 adjacency =: (= {&parent)"0/~ i. # parent
-descendant =: adjacency (] +. +./ .*.)^:_ = i. # parent
+descendant =: adjacency (] +. +./ .*.)^:_ =/~ i. # parent
 du =: (size = 0) # descendant +/ .* size
 
 smoutput +/ (#~ <:&100000) du
