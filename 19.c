@@ -86,6 +86,7 @@ int max_geodes_greedy(const struct blueprint *bp)
     struct state s = init_state;
     for (unsigned char t = 0; t < TIME; ++t)
     {
+        printf("t = %2d", t);
         struct state s_ = s;
         s_.ore      += s.ore_robots;
         s_.clay     += s.clay_robots;
@@ -96,33 +97,47 @@ int max_geodes_greedy(const struct blueprint *bp)
         const int t_o = t_obsidian(bp, &s);
         const int t_c = t_clay(bp, &s);
         if (t_g == 0)
+        {
             buy_geode_robot(bp, &s_);
+            printf("\tbuy geode robot");
+        }
         else if (t_o == 0)
         {
             buy_obsidian_robot(bp, &s_);
-            if (t_g >= 0 && t_g <= t_geode(bp, &s))
+            if (t_g >= 0 && t_g <= t_geode(bp, &s_))
             {
-                unbuy_obsidian_robot(bp, &s);
+                unbuy_obsidian_robot(bp, &s_);
                 goto try_clay;
             }
+            printf("\tbuy obsidian robot");
         }
         else try_clay: if (t_c == 0)
         {
             buy_clay_robot(bp, &s_);
-            if (t_o >= 0 && t_o <= t_obsidian(bp, &s))
+            if ((t_g >= 0 && t_g <= t_geode(bp, &s_))
+                    || (t_o >= 0 && t_o <= t_obsidian(bp, &s_)))
             {
-                unbuy_clay_robot(bp, &s);
+                unbuy_clay_robot(bp, &s_);
                 goto try_ore;
             }
+            printf("\tbuy clay robot");
         }
         else try_ore: if (t_ore(bp, &s) == 0)
         {
             buy_ore_robot(bp, &s_);
-            if (t_c >= 0 && t_c <= t_clay(bp, &s))
-                unbuy_ore_robot(bp, &s);
+            if ((t_g >= 0 && t_g <= t_geode(bp, &s_))
+                    || (t_o >= 0 && t_o <= t_obsidian(bp, &s_))
+                    || (t_c >= 0 && t_c <= t_clay(bp, &s_)))
+                unbuy_ore_robot(bp, &s_);
+            else
+                printf("\tbuy ore robot");
         }
 
         s = s_;
+        printf("\n\t%d robots have collected %d ore\n", s.ore_robots, s.ore);
+        printf("\t%d robots have collected %d clay\n", s.clay_robots, s.clay);
+        printf("\t%d robots have collected %d obsidian\n", s.obsidian_robots, s.obsidian);
+        printf("\t%d robots have collected %d geode\n", s.geode_robots, s.geode);
     }
     return s.geode;
 }
